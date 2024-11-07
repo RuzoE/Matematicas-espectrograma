@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espectrograma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ESPECTROGRAMA</h1>
+            <button class="buttont" id="toggleButton">
+                <img src="microphone-icon.webp" alt="Micrófono" class="icon"> 
+            </button>
+            <button class="buttont" id="helpButton">
+                <img src="help-icon.png" alt="Ayuda" class="icon"> 
+            </button>
+            <button class="buttont" id="conceptButton">
+                <img src="concept-icon.png" alt="Conceptos" class="icon"> 
+            </button>
+        </div>
+        <canvas id="spectrogram"></canvas>
+        <div class="frequency-table">
+            <div class="frequency-mark" style="top: 91%;"></div>
+            <div class="frequency-label" style="top: 89%;">149 Hz</div>
+
+            <div class="frequency-mark" style="top: 72%;"></div>
+            <div class="frequency-label" style="top: 70%;">397 Hz</div>
+
+            <div class="frequency-mark" style="top: 55%;"></div>
+            <div class="frequency-label" style="top: 53%;">1058 Hz</div>
+
+            <div class="frequency-mark" style="top: 37%;"></div>
+            <div class="frequency-label" style="top: 35%;">2818 Hz</div>
+
+            <div class="frequency-mark" style="top: 19.6%;"></div>
+            <div class="frequency-label" style="top: 17%;">7507 Hz</div>
+
+            <div class="frequency-mark" style="top: 6%;"></div>
+            <div class="frequency-label" style="top: 4%;">20000 Hz</div>
+        </div>
+    </div>
+
+    <!-- Modal de Ayuda -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>INSTRUCCIONES</h2>
+            <p>Bienvenido a este programa. Este programa facilita la visualización de la intensidad de distintas frecuencias del sonido que capta el micrófono de tu dispositivo. A continuación, se describen los pasos y las funciones para emplear el software:
+            <h3>1. Ininio</h3>
+            <p>
+                <strong>Botón "Activar Micrófono"</strong>: 
+                Haz clic en este botón para iniciar la captura y visualización del sonido. Se te pedirá autorización para acceder al micrófono, así que asegúrate de otorgarla.<br>
+                
+            </p>
+
+            <h3>2. Visualización</h3>
+            <p>
+                <strong>Canvas</strong>: La visualización tiene lugar en un lienzo que representa la intensidad de las frecuencias del sonido en tiempo real utilizando y¿una heramienta llamada camvas.<br>
+                <strong>Colores y Frecuencias</strong>: Los colores indican la intensidad del sonido, abarcando frecuencias desde 149 Hz hasta 20,000 Hz. La intensidad se presenta de derecha a izquierda.
+            </p>
+
+            <h3>3. Frecuencias</h3>
+            <p>
+                <strong>frecuencias Marcadas</strong>: Encontrarás una tabla con marcas y etiquetas de frecuencia que te facilitarán la interpretación del espectrograma.
+                <ul>
+                    <li><strong>149 Hz</strong>: Frecuencia baja.</li>
+                    <li><strong>397 Hz</strong>: Frecuencia media-baja.</li>
+                    <li><strong>1058 Hz</strong>: Frecuencia media.</li>
+                    <li><strong>2818 Hz</strong>: Frecuencia media-alta.</li>
+                    <li><strong>7507 Hz</strong>: Frecuencia alta.</li>
+                    <li><strong>20000 Hz</strong>: Frecuencia muy alta.</li>
+                </ul>
+            </p>
+           
+        </div>
+    </div>
+
+    <!-- Modal de Conceptos -->
+    <div id="conceptModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>¿Que es un Espectrograma?</h2>
+            <p>Un espectrograma es una representación gráfica que ilustra cómo varían las frecuencias de una señal de sonido a lo largo del tiempo. En este tipo de gráfico, el eje horizontal corresponde al tiempo, el eje vertical a las frecuencias, y los colores o la intensidad reflejan la amplitud de esas frecuencias en cada instante.
+
+                Se aplica en diferentes campos, como el análisis de audio, donde facilita el estudio de las características sonoras, y en la identificación de patrones en la voz humana o la música. También resulta útil en disciplinas como la acústica y la ingeniería, ya que permite diagnosticar problemas mediante las variaciones en el sonido.</p>
+
+            <h3>¿Que es Frecuencia?</h3>
+            <p>
+                La frecuencia es la cantidad de veces que ocurre un evento en un intervalo de tiempo determinado. En el ámbito del sonido, se refiere al número de ciclos de una onda sonora que se generan en un segundo, y se mide en hertzios (Hz).
+                
+            
+                <p>En el contexto sonoro: </p>
+
+                <p>Frecuencia baja: Produce sonidos graves (por ejemplo, el ruido de un tambor).</p>
+               <p>Frecuencia alta: Produce sonidos agudos (como el canto de un pájaro).</p> 
+                La frecuencia es lo que define el tono de un sonido: frecuencias más altas dan lugar a sonidos agudos, mientras que frecuencias más bajas generan sonidos graves. Además, la frecuencia es un concepto clave en diversas disciplinas, como la física, la música y las telecomunicaciones.</p>
+
+            <h3>Que es la ¿Intensidad?</h3>
+            <p>Es la representacion de la amplitud de la onda sonora, mostrando diferentes colores en el espectrograma; los colores más brillantes indican mayor intensidad.</p>
+
+            <h3>Transformada Rápida de Fourier</h3>
+            <p>Un algoritmo que transforma una señal del dominio del tiempo al dominio de la frecuencia se utiliza para analizar las frecuencias presentes en el sonido en tiempo real.</p>
+
+            <h3>Resolución Temporal y Frecuencial</h3>
+            <p>
+                La resolución temporal evalúa cómo se capturan cambios rápidos a lo largo del tiempo, mientras que la resolución frecuencial mide la precisión en las diferentes frecuencias. Existe un equilibrio entre ambas: al mejorar una, la otra puede verse afectada negativamente.</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>  
