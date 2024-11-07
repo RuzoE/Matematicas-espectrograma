@@ -1,0 +1,156 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 94vh;
+  margin: 0;
+  background-color: #eee9e9;
+  color: white;
+  background-image: url('fondo-abstracto.jpg'); /* Cambia esto por el nombre de tu archivo de imagen */
+  background-size: cover; /* La imagen cubrirá toda el área de la pantalla */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+
+.container {
+  position: relative;
+  width: calc(100% - 50px);
+  height: calc(94vh - 30px);
+  margin-bottom: 20px;
+}
+
+/*Modifica el tamño del texto del icono del microfono o de inicio */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
+  margin-bottom: 19px;
+}
+
+/*Modifica el color y distancioa del tirulo con respecto a los iconos */
+.header h1 {
+  margin: 0;
+  text-shadow: 2px 2px 5px rgb(27, 2, 250); /* Sombra en el texto */
+  font-size: 2em; /* Ajusta el tamaño del texto según sea necesario */
+  margin-right: 20px;
+  color: #fcf8f8;
+  margin-bottom: 1px; /* Espacio inferior */
+}
+
+
+/*Modifica la distancio, radio entre otras cosas sobre los iconos */
+.buttont {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 150px;
+  padding: 5px;
+  background-color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+/*Modifica el color de los iconos cuando se coloca en cima el cursor*/
+.buttont:hover {
+  transform: scale(1.2);
+  background-color: #6b96ebb8;
+}
+
+/*Moifica el tamaño de los iconos*/
+.icon {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+}
+/*Modifica el especio visual del espectrograma*/
+canvas {
+  width: 100%;
+  height: 92%;
+  background-color: #010008;
+  margin-bottom: 0;
+  border-radius: 14px;
+}
+
+.frequency-table {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  margin-top: 1.2cm;
+  padding-top: 25px;
+}
+
+/* modifica los indicadores de frecuencias*/
+.frequency-mark {
+  width: 30px;
+  height: 3px;
+  background-color: #dddde2;
+  position: absolute;
+}
+
+/*Modifica el tamaño del texto que indica la frecuencia */
+.frequency-label {
+  font-size: 14px;
+  position: absolute;
+  right: 0;
+}
+
+/* Modal de Ayuda */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(12, 12, 12, 0.4);
+}
+
+/*Modifica todo el contenido que se encuentre dentro del recuadro del modal */
+.modal-content {
+  background-color: #0f0f0f;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Modifica el color de los títulos dentro del recuadro del modal */
+.modal-content h2,
+.modal-content h3 {
+  color: #f1f1f1; /* Color del texto */
+  text-shadow: 2px 2px 5px rgb(47, 2, 250); /* Sombra en el texto */
+  font-size: 1.5em; /* Ajusta el tamaño del texto según sea necesario */
+  margin-bottom: 15px; /* Espacio inferior */
+}
+
+
+
+/*MOdifca el color y tamñao del indicador de cierre del nodal o ventana */
+.close {
+  color: #877e7e;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/*Modifica el cambio de color cuado se coloca el cursor en cima del indicador de cierr "X" */
+.close:hover,
+.close:focus {
+  color: rgb(246, 12, 12);
+  text-decoration: none;
+  cursor: pointer;
+}
