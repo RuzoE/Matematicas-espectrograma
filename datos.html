@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Datos del Espectrograma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="data-container">
+        <h2>Resumen de Datos</h2>
+        <p>Frecuencia más alta detectada: <strong id="maxFreq">No disponible</strong> Hz</p>
+        <p>Frecuencia media: <strong id="avgFreq">No disponible</strong> Hz</p>
+        <p>Frecuencia más baja detectada: <strong id="minFreq">No disponible</strong> Hz</p>
+        <p>Rango de frecuencias: <strong id="rangeFreq">No disponible</strong> Hz</p>
+        <p>Amplitud promedio: <strong id="avgAmplitude">No disponible</strong></p>
+        <button id="volver" class="btn">Volver al Espectrograma</button>
+      </div>
+      
+        <button id="volver" class="btn">Volver al Espectrograma</button>
+    </div>
+
+    <script>
+        // Cargar datos desde localStorage
+        const datosEspectrograma = JSON.parse(localStorage.getItem('datosEspectrograma')) || {
+            frecuenciaAlta: "No disponible",
+            frecuenciaMedia: "No disponible",
+            frecuenciaBaja: "No disponible",
+            rangoFrecuencias: "No disponible",
+            amplitudPromedio: "No disponible"
+        };
+
+        // Actualizar los elementos en la página con los datos cargados
+        document.getElementById('maxFreq').innerText = datosEspectrograma.frecuenciaAlta;
+        document.getElementById('avgFreq').innerText = datosEspectrograma.frecuenciaMedia;
+        document.getElementById('minFreq').innerText = datosEspectrograma.frecuenciaBaja;
+        document.getElementById('rangeFreq').innerText = datosEspectrograma.rangoFrecuencias;
+        document.getElementById('avgAmplitude').innerText = datosEspectrograma.amplitudPromedio;
+
+        // Botón para volver al espectrograma
+        document.getElementById('volver').addEventListener('click', () => {
+            window.location.href = 'espectrograma.html'; // Cambia esto si el archivo se llama de otra manera
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -11,19 +10,29 @@
 
 <body>
     <div class="container">
+        <!-- Encabezado con botones -->
         <div class="header">
             <h1>ESPECTROGRAMA</h1>
             <button class="buttont" id="toggleButton">
-                <img src="microphone-icon.webp" alt="Micrófono" class="icon"> 
+                <img src="microphone-icon.webp" alt="Activar/Desactivar Micrófono" class="icon"> 
             </button>
             <button class="buttont" id="helpButton">
-                <img src="help-icon.png" alt="Ayuda" class="icon"> 
+                <img src="help-icon.png" alt="Abrir Ayuda" class="icon"> 
             </button>
             <button class="buttont" id="conceptButton">
-                <img src="concept-icon.png" alt="Conceptos" class="icon"> 
+                <img src="concept-icon.png" alt="Abrir Conceptos" class="icon"> 
             </button>
         </div>
+
+        <!-- Canvas para el espectrograma -->
         <canvas id="spectrogram"></canvas>
+
+        <!-- Botón "Ver Datos" -->
+        <button id="viewDataButton" style="position: absolute; top: 20px; right: 20px; padding: 10px 20px; font-size: 16px; background-color: #6200ea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Ver Datos
+        </button>
+
+        <!-- Tabla de frecuencias -->
         <div class="frequency-table">
             <div class="frequency-mark" style="top: 91%;"></div>
             <div class="frequency-label" style="top: 89%;">149 Hz</div>
@@ -112,7 +121,13 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="app.js"></script>
+    <script>
+        // Redirección al hacer clic en el botón "Ver Datos"
+        document.getElementById('viewDataButton').addEventListener('click', function() {
+            window.location.href = 'datos.html';
+        });
+    </script>
 </body>
-
-</html>  
+</html>

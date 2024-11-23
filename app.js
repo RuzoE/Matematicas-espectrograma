@@ -7,6 +7,9 @@ let canvasContext;
 let spectrogramData = [];
 const speedFactor = 1.1; // Factor de velocidad para el desplazamiento
 
+let frequencies = []; // Array para almacenar frecuencias
+let amplitudes = [];  // Array para almacenar amplitudes
+
 async function setupAudio() {
     try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -25,6 +28,9 @@ async function setupAudio() {
 function startSpectrogram() {
     if (!analyser) return;
 
+    frequencies = [];
+    amplitudes = [];
+
     const canvas = document.getElementById('spectrogram');
     canvasContext = canvas.getContext('2d');
     const bufferLength = analyser.frequencyBinCount;
@@ -33,15 +39,14 @@ function startSpectrogram() {
     const lowerFrequencyLimit = 149; // Frecuencia mínima en Hz
     const upperFrequencyLimit = 20000; // Frecuencia máxima en Hz
 
-    // Colores según el nivel de volumen
     const colors = {
-        low: [0, 102, 204],      // Azul claro
-        medium: [255, 255, 0],   // Amarillo
-        high: [255, 0, 0],       // Rojo
-        threshold: [255, 165, 0] // Naranja
+        low: [0, 102, 204],
+        medium: [255, 255, 0],
+        high: [255, 0, 0],
+        threshold: [255, 165, 0]
     };
 
-    const threshold = 170; // Umbral de intensidad del sonido
+    const threshold = 170;
 
     function draw() {
         if (!isStreaming) return;
@@ -60,23 +65,26 @@ function startSpectrogram() {
                     const logFrequency = 1 - Math.log10(frequency / lowerFrequencyLimit) / Math.log10(upperFrequencyLimit / lowerFrequencyLimit);
                     const y = Math.floor(logFrequency * canvasHeight);
 
-                    // Definir colores según intensidad
                     if (dataArray[i] < 100) {
-                        column[y * 4] = colors.low[0];      // Azul
-                        column[y * 4 + 1] = colors.low[1];  // Verde
-                        column[y * 4 + 2] = colors.low[2];  // Cian
+                        column[y * 4] = colors.low[0];
+                        column[y * 4 + 1] = colors.low[1];
+                        column[y * 4 + 2] = colors.low[2];
                     } else if (dataArray[i] < threshold) {
-                        column[y * 4] = colors.medium[0];   // Amarillo
+                        column[y * 4] = colors.medium[0];
                         column[y * 4 + 1] = colors.medium[1];
                         column[y * 4 + 2] = colors.medium[2];
                     } else {
-                        column[y * 4] = colors.high[0];      // Rojo
+                        column[y * 4] = colors.high[0];
                         column[y * 4 + 1] = colors.high[1];
                         column[y * 4 + 2] = colors.high[2];
                     }
 
-                    // Añadir opacidad
                     column[y * 4 + 3] = Math.min(255, dataArray[i] * 2);
+
+                    if (dataArray[i] > 0) {
+                        frequencies.push(frequency);
+                        amplitudes.push(dataArray[i]);
+                    }
                 }
             }
             spectrogramData.unshift(column);
@@ -95,54 +103,125 @@ function startSpectrogram() {
     draw();
 }
 
+function saveDynamicStatsToLocalStorage() { 
+    if (!frequencies || frequencies.length === 0 || !amplitudes || amplitudes.length === 0) {
+        console.warn("No hay datos suficientes para guardar en LocalStorage.");
+        return;
+    }
+
+    // Cálculos de estadísticas
+    const maxFreq = Math.max(...frequencies); // Frecuencia máxima
+    const minFreq = Math.min(...frequencies); // Frecuencia mínima
+    const midFreq = frequencies.length > 0
+        ? frequencies.reduce((a, b) => a + b, 0) / frequencies.length
+        : "No disponible"; // Media de frecuencias
+    const rangeFreq = maxFreq - minFreq; // Rango de frecuencias
+    const avgAmplitude = amplitudes.length > 0 
+        ? amplitudes.reduce((a, b) => a + b, 0) / amplitudes.length 
+        : "No disponible"; // Amplitud promedio
+
+    // Formatear datos para guardar
+    const datosEspectrograma = {
+        frecuenciaAlta: maxFreq.toFixed(2),
+        frecuenciaBaja: minFreq.toFixed(2),
+        frecuenciaMedia: typeof midFreq === "number" ? midFreq.toFixed(2) : midFreq,
+        rangoFrecuencias: rangeFreq.toFixed(2),
+        amplitudPromedio: avgAmplitude !== "No disponible" ? avgAmplitude.toFixed(2) : avgAmplitude
+    };
+
+    // Guardar en LocalStorage
+    localStorage.setItem("datosEspectrograma", JSON.stringify(datosEspectrograma));
+    console.log("Datos guardados en LocalStorage:", datosEspectrograma);
+}
+
 function toggleMicrophone() {
     const buttonIcon = document.getElementById('toggleButton').querySelector('img');
 
     if (isStreaming) {
-        stream.getTracks().forEach(track => track.stop());
+        // Detener el espectrograma
         isStreaming = false;
-        buttonIcon.src = 'play.png'; // Cambia al ícono de micrófono desactivado
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        // Guardar estadísticas en LocalStorage
+        saveDynamicStatsToLocalStorage();
+
+        // Cambiar el icono del botón
+        buttonIcon.src = 'play.png';
         buttonIcon.alt = 'Activar Micrófono';
+
+        console.log("Espectrograma pausado.");
     } else {
-        setupAudio().then(() => {
-            isStreaming = true;
-            buttonIcon.src = 'microphone-off.webp'; // Cambia al ícono de micrófono activado
-            buttonIcon.alt = 'Desactivar Micrófono';
-            startSpectrogram();
-        });
+        // Iniciar el espectrograma
+        setupAudio()
+            .then(() => {
+                isStreaming = true;
+
+                // Cambiar el icono del botón
+                buttonIcon.src = 'microphone-off.webp';
+                buttonIcon.alt = 'Desactivar Micrófono';
+
+                // Iniciar espectrograma
+                startSpectrogram();
+                console.log("Espectrograma iniciado.");
+            })
+            .catch(error => {
+                console.error('Error al iniciar el espectrograma:', error);
+                alert('No se pudo acceder al micrófono. Revisa los permisos.');
+            });
     }
 }
 
-document.getElementById('toggleButton').addEventListener('click', toggleMicrophone);
+const toggleButton = document.getElementById('toggleButton');
+if (toggleButton) {
+    toggleButton.addEventListener('click', toggleMicrophone);
+}
 
-// Funcionalidad de los modales
-document.addEventListener('DOMContentLoaded', function() {
-    const helpModal = document.getElementById('helpModal');
-    const conceptModal = document.getElementById('conceptModal');
-    const helpButton = document.getElementById('helpButton');
-    const conceptButton = document.getElementById('conceptButton');
-    const closeButtons = document.querySelectorAll('.close');
+// Selección de los elementos del DOM
+const helpButton = document.getElementById('helpButton'); // Botón de ayuda
+const helpModal = document.getElementById('helpModal');   // Modal de ayuda
+const conceptButton = document.getElementById('conceptButton'); // Botón de información
+const conceptModal = document.getElementById('conceptModal');   // Modal de información
+const closeButtons = document.querySelectorAll('.close'); // Botones de cierre
 
-    helpButton.addEventListener('click', function() {
-        helpModal.style.display = 'block';
-    });
+// Función para mostrar un modal
+function showModal(modal) {
+  modal.style.display = 'block';
+}
 
-    conceptButton.addEventListener('click', function() {
-        conceptModal.style.display = 'block';
-    });
+// Función para ocultar un modal
+function hideModal(modal) {
+  modal.style.display = 'none';
+}
 
-    closeButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            helpModal.style.display = 'none';
-            conceptModal.style.display = 'none';
-        });
-    });
+// Mostrar el modal de ayuda
+if (helpButton) {
+  helpButton.addEventListener('click', () => {
+    showModal(helpModal);
+  });
+}
 
-    window.addEventListener('click', function(event) {
-        if (event.target == helpModal) {
-            helpModal.style.display = 'none';
-        } else if (event.target == conceptModal) {
-            conceptModal.style.display = 'none';
-        }
-    });
+// Mostrar el modal de información
+if (conceptButton) {
+  conceptButton.addEventListener('click', () => {
+    showModal(conceptModal);
+  });
+}
+
+// Cerrar los modales al hacer clic en el botón de cierre
+closeButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const modal = button.closest('.modal');
+    hideModal(modal);
+  });
+});
+
+// Cerrar el modal al hacer clic fuera del contenido
+window.addEventListener('click', (event) => {
+  if (event.target === helpModal) {
+    hideModal(helpModal);
+  } else if (event.target === conceptModal) {
+    hideModal(conceptModal);
+  }
 });

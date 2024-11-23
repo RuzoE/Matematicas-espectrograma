@@ -154,3 +154,151 @@ canvas {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Altura completa del viewport */
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  overflow: hidden; /* Ocultar barras de desplazamiento */
+}
+
+/* Contenedor principal (sin fondo blanco) */
+.container {
+  width: 95%; /* Ocupa todo el ancho */
+  height: 95%; /* Ocupa toda la altura */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Cuadro blanco para los datos */
+.data-container {
+  position: fixed; /* Asegurar que el cuadro sea independiente del resto */
+  top: 50%; /* Centrar verticalmente */
+  left: 50%; /* Centrar horizontalmente */
+  transform: translate(-50%, -50%); /* Ajuste de centrado */
+  width: 400px; /* Ancho del cuadro */
+  padding: 20px; /* Espaciado interno */
+  background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
+  z-index: 1000; /* Asegurar que el cuadro esté por encima del espectrograma */
+  text-align: center; /* Centrar el texto */
+}
+
+/* Título dentro del cuadro */
+.data-container h2 {
+  font-size: 18px;
+  color: #6200ea; /* Morado */
+  margin-bottom: 15px;
+}
+
+/* Datos dentro del cuadro */
+.data-container p {
+  font-size: 16px;
+  color: #333; /* Texto oscuro */
+  margin: 5px 0;
+}
+
+/* Botón dentro del cuadro */
+.data-container .btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: white;
+  background-color: #6200ea;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.data-container .btn:hover {
+  background-color: #3700b3; /* Morado más oscuro */
+}
+
+
+/* Título */
+h1 {
+  font-size: 36px;
+  color: white; /* Texto en blanco */
+  margin: 20px 0; /* Espaciado superior e inferior */
+  text-align: center;
+}
+
+/* Espectrograma */
+.spectrogram {
+  flex: 1; /* Ocupa el espacio restante */
+  width: 70%; /* Ancho completo */
+  height: calc(40% - 60px); /* Altura dinámica menos el espacio del encabezado */
+  background: black; /* Fondo negro del espectrograma */
+  overflow: hidden; /* Ocultar contenido desbordado */
+}
+
+/* Iconos y Botones */
+button {
+  padding: 12px 25px;
+  font-size: 16px;
+  color: white;
+  background-color: #6200ea;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease; /* Transición suave */
+}
+
+button:hover {
+  background-color: #3700b3;
+}
+
+/* Ajustes para los iconos */
+.icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px; /* Separación entre iconos */
+  margin-right: 20px; /* Separación del borde derecho */
+}
+
+.icons img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.icons img:hover {
+  transform: scale(1.1); /* Efecto de zoom */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .container {
+    width: 100%; /* Ajustar ancho en móviles */
+    height: 100%; /* Ocupa toda la altura */
+  }
+
+  h1 {
+    font-size: 24px; /* Reducir tamaño del título */
+  }
+
+  .spectrogram {
+    height: 80%; /* Ajustar altura */
+  }
+
+  .icons img {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
